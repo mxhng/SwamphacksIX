@@ -3,6 +3,7 @@ import requests
 import urllib.request
 from bs4 import BeautifulSoup 
 
+from cloudVisionTest import uploadFile
 
 # Receives a url and returns it as text
 def getData(url): 
