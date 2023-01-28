@@ -8,7 +8,7 @@ import string
 from google.cloud import vision
 from os import listdir
 
-from imageHTML import getData, downloadImg, generateName, uploadFile
+from imageHTML import downloadImg, generateName, uploadFile
 
 # Imports the Google Cloud client library
 from google.cloud import storage
@@ -52,7 +52,7 @@ def vision(safe, labels):
         print(label.description)
     print('\n')
 
-#local source folder
+# local source folder
 source = './resources'
 
 # Creates the new bucket
@@ -64,34 +64,40 @@ client = vision.ImageAnnotatorClient()
 files = os.listdir(path='./resources/')
 length = len(files)
 
-#generate name for new bucket to be made in the cloud
+# Generate name for new bucket to be made in the cloud
 newBucketName = generateName(6)
 
-#make the bucket, will be deleted
+# Make the bucket, will be deleted
 bucket = storage_client.create_bucket(newBucketName)
 
-#get html data
-htmldata = getData("https://en.wikipedia.org/wiki/Red-eared_slider") #will be replaced with user input url
-soup = BeautifulSoup(htmldata, 'html.parser') 
+# Receives a url and returns it as text
+url = "https://www.airbnb.co.uk/s/Bratislava--Slovakia/homes?tab_id=home_tab&refinement_paths%5B%5D=%2Fhomes&place_id=ChIJl2HKCjaJbEcRaEOI_YKbH2M&query=Bratislava%2C%20Slovakia&checkin=2020-11-01&checkout=2020-11-22&source=search_blocks_selector_p1_flow&search_type=search_query" # will be replaced with user input url
+r = requests.get(url)
+soup = BeautifulSoup(r.text, 'html.parser')
 
-#for each image in html, run downloadImg
+# For each image in html, run downloadImg
+num = 0
 for image in soup.find_all('img'):
-    #print(image['src'])
-    downloadImg(image['src'], "images", newBucketName)
+    image_url = image['src']
+    print(image_url)
+    if(image_url != "" and image_url.find("http") != -1):
+        downloadImg(image['src'], "images", newBucketName, num)
+        num += 1 
 
-#list of items in cloud bucket
+# List of items in cloud bucket
 bucketList = bucket.list_blobs()
 
 #amount of images files uploaded to cloud bucket
 totalImgs = len(bucketList)
 
-#checks each image in bucket using cloud vision
+# Checks each image in bucket using cloud vision
 for x in bucketList:
     print('checking ' + x.name())
     content = x.download_as_bytes()
     image = vision.Image(content=content)
     labelresponse = client.label_detection(image=image)
     ssresponse = client.safe_search_detection(image=image)
+
     checkSafe = ssresponse.safe_search_annotation
     checkLabels = labelresponse.label_annotations
 
