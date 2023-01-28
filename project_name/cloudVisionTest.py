@@ -16,6 +16,42 @@ from google.cloud import storage
 # Instantiates a storage client
 storage_client = storage.Client()
 
+#stats to be collected
+adultContent = Stat(adult)
+medicalContent = Stat(medical);
+spoofedContent = Stat(spoofed);
+violentContent = Stat(violent);
+racyContent = Stat(racy)
+
+def vision(safe, labels):
+    #safe search check
+    
+    print('Safe search~\nLikelihood of image category (0-5)')
+
+    print('adult: {}'.format(safe.adult))
+    adultContent.add(safe.adult)
+
+    print('medical: {}'.format(safe.medical))
+    medicalContent.add(safe.medical)
+
+    print('spoofed: {}'.format(safe.spoof))
+    spoofedContent.add(safe.spoof)
+
+    print('adult: {}'.format(safe.violence))
+    violentContent.add(safe.violence)
+
+    print('adult: {}'.format(likelihood_name[safe.racy]))
+    racyContent.add(safe.racy)
+
+
+    print('\n')
+
+    #image labeling
+    print('\nLabels~')
+    for label in labels:
+        print(label.description)
+    print('\n')
+
 # local source folder
 source = './resources'
 
@@ -24,7 +60,6 @@ source = './resources'
 
 # Instantiates a vision client
 client = vision.ImageAnnotatorClient()
-
 
 files = os.listdir(path='./resources/')
 length = len(files)
@@ -52,35 +87,21 @@ for image in soup.find_all('img'):
 # List of items in cloud bucket
 bucketList = bucket.list_blobs()
 
+#amount of images files uploaded to cloud bucket
+totalImgs = len(bucketList)
+
 # Checks each image in bucket using cloud vision
 for x in bucketList:
-    #print('checking ' + x.name())
+    print('checking ' + x.name())
     content = x.download_as_bytes()
     image = vision.Image(content=content)
     labelresponse = client.label_detection(image=image)
     ssresponse = client.safe_search_detection(image=image)
-    safe = ssresponse.safe_search_annotation
-    labels = labelresponse.label_annotations
 
-    # safe search check
-    likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
-                       'LIKELY', 'VERY_LIKELY')
-    print('Safe search~\nLikelihood of image category (0-5)')
+    checkSafe = ssresponse.safe_search_annotation
+    checkLabels = labelresponse.label_annotations
 
-    print('adult: {}'.format(safe.adult))
-    print('adult: {}'.format(likelihood_name[safe.adult]))
-
-    print('medical: {}'.format(likelihood_name[safe.medical]))
-    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
-    print('violence: {}'.format(likelihood_name[safe.violence]))
-    print('racy: {}'.format(likelihood_name[safe.racy]))
-    print('\n')
-
-    # image labeling
-    print('\nLabels~')
-    for label in labels:
-        print(label.description)
-    print('\n')
+    vision(checkSafe)
 
     x.delete()
 
@@ -88,3 +109,6 @@ for x in bucketList:
 bucket = storage_client.get_bucket(newBucketName)
 bucket.delete()
 print(f"Bucket {newBucketName} deleted")
+
+if (totalImgs == 0):
+    print("No images found on this website.")
