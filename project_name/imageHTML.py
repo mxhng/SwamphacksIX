@@ -9,6 +9,7 @@ from google.cloud import vision
 
 from google.cloud import storage
 
+
 def generateName(length):
     l = string.ascii_lowercase
     resultStr = 'safescan'
@@ -25,8 +26,8 @@ def uploadFile(bucket_name, source_file, new_file_name):
     print(f"File {source_file} uploaded to new bucket {new_file_name}.")
 
 # Given an image URL, downloads the image into a local folder, uploads image to the cloud bucket, delete local image 
-def downloadImg(image_url, folder, bucket):
-    filename = folder + "/" + image_url.split("/")[-1] 
+def downloadImg(image_url, folder, bucket, num):
+    filename = folder + "/" + str(num) + ".jpg"
 
     r = requests.get(image_url, stream = True)
     if r.ok:
