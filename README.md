@@ -1,7 +1,7 @@
 # SwamphacksIX
  Swamphacks with Max Huang, Tony Gupta, Brenda Nakasone, Liam Sy
 
- *Instructions for setting up solution*
+ *Instructions for setting up solution* 
  set python to v. 3.10.7 
  $pip install google-cloud-vision (installs vision client library for python)
  $pip install google-cloud-storage (installs storage client library for python)
