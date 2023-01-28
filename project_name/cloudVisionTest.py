@@ -10,8 +10,18 @@ from os import listdir
 
 from imageHTML import getData, downloadImg, generateName, uploadFile
 
+# Imports the Google Cloud client library
+from google.cloud import storage
 
-constant likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY')
+# Instantiates a storage client
+storage_client = storage.Client()
+
+#stats to be collected
+adultContent = Stat(adult)
+medicalContent = Stat(medical);
+spoofedContent = Stat(spoofed);
+violentContent = Stat(violent);
+racyContent = Stat(racy)
 
 def vision(safe, labels):
     #safe search check
@@ -19,12 +29,21 @@ def vision(safe, labels):
     print('Safe search~\nLikelihood of image category (0-5)')
 
     print('adult: {}'.format(safe.adult))
-    print('adult: {}'.format(likelihood_name[safe.adult]))
+    adultContent.add(safe.adult)
 
-    print('medical: {}'.format(likelihood_name[safe.medical]))
-    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
-    print('violence: {}'.format(likelihood_name[safe.violence]))
-    print('racy: {}'.format(likelihood_name[safe.racy]))
+    print('medical: {}'.format(safe.medical))
+    medicalContent.add(safe.medical)
+
+    print('spoofed: {}'.format(safe.spoof))
+    spoofedContent.add(safe.spoof)
+
+    print('adult: {}'.format(safe.violence))
+    violentContent.add(safe.violence)
+
+    print('adult: {}'.format(likelihood_name[safe.racy]))
+    racyContent.add(safe.racy)
+
+
     print('\n')
 
     #image labeling
@@ -32,12 +51,6 @@ def vision(safe, labels):
     for label in labels:
         print(label.description)
     print('\n')
-
-# Imports the Google Cloud client library
-from google.cloud import storage
-
-# Instantiates a storage client
-storage_client = storage.Client()
 
 #local source folder
 source = './resources'
@@ -57,13 +70,6 @@ newBucketName = generateName(6)
 #make the bucket, will be deleted
 bucket = storage_client.create_bucket(newBucketName)
 
-#stats to be collected
-adultContent = 0;
-medicalContent = 0;
-spoofedContent = 0;
-violentContent = 0;
-Content = 0;
-
 #get html data
 htmldata = getData("https://en.wikipedia.org/wiki/Red-eared_slider") #will be replaced with user input url
 soup = BeautifulSoup(htmldata, 'html.parser') 
@@ -78,7 +84,6 @@ bucketList = bucket.list_blobs()
 
 #amount of images files uploaded to cloud bucket
 totalImgs = len(bucketList)
-
 
 #checks each image in bucket using cloud vision
 for x in bucketList:
