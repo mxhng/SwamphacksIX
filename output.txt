@@ -1,0 +1,123 @@
+Data for boobtest.jfif:
+Safe search~
+Likelihood of image category (0-5)
+adult: 5
+adult: VERY_LIKELY
+medical: VERY_LIKELY
+spoofed: LIKELY
+violence: UNLIKELY
+racy: VERY_LIKELY
+
+
+
+Labels~
+Hair
+Joint
+Skin
+Arm
+Shoulder
+Stomach
+Muscle
+Eyelash
+Neck
+Human body
+
+
+Data for chinesecemetary.PNG:
+Safe search~
+Likelihood of image category (0-5)
+adult: 1
+adult: VERY_UNLIKELY
+medical: VERY_UNLIKELY
+spoofed: VERY_UNLIKELY
+violence: VERY_UNLIKELY
+racy: VERY_UNLIKELY
+
+
+
+Labels~
+Sky
+Plant
+Cloud
+Tree
+Land lot
+Natural landscape
+Grass
+Landscape
+Grassland
+Leisure
+
+
+Data for spooky.jpg:
+Safe search~
+Likelihood of image category (0-5)
+adult: 1
+adult: VERY_UNLIKELY
+medical: VERY_UNLIKELY
+spoofed: VERY_UNLIKELY
+violence: UNLIKELY
+racy: VERY_UNLIKELY
+
+
+
+Labels~
+Flash photography
+Eyelash
+Iris
+Art
+Sky
+Gas
+Snout
+Symmetry
+Bone
+Circle
+
+
+Data for susimage.jpg:
+Safe search~
+Likelihood of image category (0-5)
+adult: 1
+adult: VERY_UNLIKELY
+medical: VERY_UNLIKELY
+spoofed: VERY_UNLIKELY
+violence: UNLIKELY
+racy: POSSIBLE
+
+
+
+Labels~
+Shoe
+Plant
+Leg
+People in nature
+Happy
+Flash photography
+Sunlight
+Thigh
+Grass
+Leisure
+
+
+Data for wakeupcat.jpg:
+Safe search~
+Likelihood of image category (0-5)
+adult: 1
+adult: VERY_UNLIKELY
+medical: UNLIKELY
+spoofed: VERY_LIKELY
+violence: POSSIBLE
+racy: VERY_UNLIKELY
+
+
+
+Labels~
+Cat
+Window
+Felidae
+Carnivore
+Jaw
+Small to medium-sized cats
+Gesture
+Whiskers
+Window blind
+Fawn
