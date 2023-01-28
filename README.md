@@ -14,6 +14,4 @@
  ```
  - set python to v. 3.10.7 
  - go into settings and "edit the system environment variables" --> "environmental variables" --> "system variables" --> variable name: "GOOGLE_APPLICATION_CREDENTIALS" --> variable value: navigate to authorization.json in project folder 
- 
-
 
