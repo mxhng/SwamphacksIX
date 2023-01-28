@@ -24,11 +24,6 @@ def uploadFile(bucket_name, source_file, new_file_name):
     blob.upload_from_filename(source_file)
     print(f"File {source_file} uploaded to new bucket {new_file_name}.")
 
-# Receives a url and returns it as text
-def getData(url): 
-    r = requests.get(url) 
-    return r.text 
-
 # Given an image URL, downloads the image into a local folder, uploads image to the cloud bucket, delete local image 
 def downloadImg(image_url, folder, bucket):
     filename = folder + "/" + image_url.split("/")[-1] 
