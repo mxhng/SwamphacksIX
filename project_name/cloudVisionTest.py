@@ -1,5 +1,8 @@
 import io
 import os
+import random
+import string
+
 from google.cloud import vision
 from os import listdir
 
@@ -7,59 +10,87 @@ from os import listdir
 from google.cloud import storage
 
 # Instantiates a storage client
-#storage_client = storage.Client()
+storage_client = storage.Client()
 
 #local source folder
 source = './resources'
 
-# The name for the new bucket
-#bucket_name = "mmhbucket"
-#main_bucket = storage_client.bucket(bucket_name)
-
 # Creates the new bucket
 #bucket = storage_client.create_bucket(bucket_name)
 
-# Instantiates a client
+# Instantiates a vision client
 client = vision.ImageAnnotatorClient()
+
+
+def generateName(length):
+    l = string.ascii_lowercase
+    resultStr = 'safescan'
+    for i in range(length):
+        resultStr = resultStr + random.choice(l)
+    return resultStr
+
+def uploadFile(bucket_name, source_file, new_file_name):
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(new_file_name)
+
+    blob.upload_from_filename(source_file)
+    print(f"File {source_file} uploaded to new bucket {new_file_name}.")
+
+
+#generate name for new bucket to be made in the cloud
+newBucketName = generateName(6)
+
+#make the bucket, will be deleted
+bucket = storage_client.create_bucket(newBucketName)
+
 
 files = os.listdir(path='./resources/')
 length = len(files)
 
-#add images to cloud (doesnt work yet)
-#for i in files:
-    #upload_blob('./resources/'+i, main_bucket, './resources/'+i)
+bucketList = bucket.list_blobs();
 
 
 #looks at all images in folder 'resources'
 for i in files:
     with io.open('./resources/'+i, 'rb') as image_file:
+        uploadFile(newBucketName, './resources/' + i, 'COPY'+i)
 
-        content = image_file.read()
-        image = vision.Image(content=content)
-        labelresponse = client.label_detection(image=image)
-        ssresponse = client.safe_search_detection(image=image)
-        safe = ssresponse.safe_search_annotation
-        labels = labelresponse.label_annotations
 
-        #data output starts
-        print('Data for ' + i + ':')
+for x in bucketList:
+    content = x.download_as_bytes()
+    image = vision.Image(content=content)
+    labelresponse = client.label_detection(image=image)
+    ssresponse = client.safe_search_detection(image=image)
+    safe = ssresponse.safe_search_annotation
+    labels = labelresponse.label_annotations
 
-        #safe search check
-        likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
+    #data output starts
+    #print('Data for ' + x.name + ':')
+
+    #safe search check
+    likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                        'LIKELY', 'VERY_LIKELY')
-        print('Safe search~\nLikelihood of image category (0-5)')
+    print('Safe search~\nLikelihood of image category (0-5)')
 
-        print('adult: {}'.format(safe.adult))
-        print('adult: {}'.format(likelihood_name[safe.adult]))
+    print('adult: {}'.format(safe.adult))
+    print('adult: {}'.format(likelihood_name[safe.adult]))
 
-        print('medical: {}'.format(likelihood_name[safe.medical]))
-        print('spoofed: {}'.format(likelihood_name[safe.spoof]))
-        print('violence: {}'.format(likelihood_name[safe.violence]))
-        print('racy: {}'.format(likelihood_name[safe.racy]))
-        print('\n')
+    print('medical: {}'.format(likelihood_name[safe.medical]))
+    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
+    print('violence: {}'.format(likelihood_name[safe.violence]))
+    print('racy: {}'.format(likelihood_name[safe.racy]))
+    print('\n')
 
-       #image labeling
-        print('\nLabels~')
-        for label in labels:
-            print(label.description)
-        print('\n')
+    #image labeling
+    print('\nLabels~')
+    for label in labels:
+        print(label.description)
+    print('\n')
+
+    x.delete()
+
+
+bucket = storage_client.get_bucket(newBucketName)
+bucket.delete()
+print(f"Bucket {newBucketName} deleted")
