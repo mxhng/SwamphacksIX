@@ -36,20 +36,22 @@ newBucketName = generateName(6)
 bucket = storage_client.create_bucket(newBucketName)
 
 #get html data
-htmldata = getData("https://en.wikipedia.org/wiki/Red-eared_slider") #will be replaced with user input url
+htmldata = getData("https://www.geeksforgeeks.org/") #will be replaced with user input url
 soup = BeautifulSoup(htmldata, 'html.parser') 
 
 #for each image in html, run downloadImg
 for image in soup.find_all('img'):
-    #print(image['src'])
-    downloadImg(image['src'], "images", newBucketName)
+    image_url = image['src']
+    #print(image_url)
+    if(image_url != "" and image_url.find("http") != -1):
+        downloadImg(image['src'], "images", newBucketName)
 
 #list of items in cloud bucket
 bucketList = bucket.list_blobs();
 
 #checks each image in bucket using cloud vision
 for x in bucketList:
-    print('checking ' + x.name())
+    #print('checking ' + x.name())
     content = x.download_as_bytes()
     image = vision.Image(content=content)
     labelresponse = client.label_detection(image=image)

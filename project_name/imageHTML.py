@@ -7,6 +7,8 @@ import random
 import string
 from google.cloud import vision
 
+from google.cloud import storage
+
 def generateName(length):
     l = string.ascii_lowercase
     resultStr = 'safescan'
