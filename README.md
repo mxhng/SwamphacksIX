@@ -10,6 +10,8 @@
  
  $pip install google-cloud-storage 
  
+ $pip install google-cloud-language
+ 
  $pip install bs4 
  ```
  - set python to v. 3.10.7 
