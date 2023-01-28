@@ -1,10 +1,14 @@
 import io
 import os
+import requests
+import urllib.request
+from bs4 import BeautifulSoup 
 import random
 import string
-
 from google.cloud import vision
 from os import listdir
+
+from imageHTML import getData, downloadImg
 
 # Imports the Google Cloud client library
 from google.cloud import storage
@@ -38,35 +42,36 @@ def uploadFile(bucket_name, source_file, new_file_name):
     print(f"File {source_file} uploaded to new bucket {new_file_name}.")
 
 
+files = os.listdir(path='./resources/')
+length = len(files)
+
 #generate name for new bucket to be made in the cloud
 newBucketName = generateName(6)
 
 #make the bucket, will be deleted
 bucket = storage_client.create_bucket(newBucketName)
 
+#get html data
+htmldata = getData("https://en.wikipedia.org/wiki/Red-eared_slider") #will be replaced with user input url
+soup = BeautifulSoup(htmldata, 'html.parser') 
 
-files = os.listdir(path='./resources/')
-length = len(files)
+#for each image in html, run downloadImg
+for image in soup.find_all('img'):
+    #print(image['src'])
+    downloadImg(image['src'], "images", newBucketName)
 
+#list of items in cloud bucket
 bucketList = bucket.list_blobs();
 
-
-#looks at all images in folder 'resources'
-for i in files:
-    with io.open('./resources/'+i, 'rb') as image_file:
-        uploadFile(newBucketName, './resources/' + i, 'COPY'+i)
-
-
+#checks each image in bucket using cloud vision
 for x in bucketList:
+    print('checking ' + x.name())
     content = x.download_as_bytes()
     image = vision.Image(content=content)
     labelresponse = client.label_detection(image=image)
     ssresponse = client.safe_search_detection(image=image)
     safe = ssresponse.safe_search_annotation
     labels = labelresponse.label_annotations
-
-    #data output starts
-    #print('Data for ' + x.name + ':')
 
     #safe search check
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
