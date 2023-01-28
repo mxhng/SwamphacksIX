@@ -8,8 +8,7 @@ from google.cloud import language_v1
 import numpy
 import six
 
-
-def classify (text, verbose = True):
+def classify (text):
     #Categorizes Input Text
 
     # Instantiates a client
@@ -28,12 +27,11 @@ def classify (text, verbose = True):
         #Turn categories into a dictionary/map of structure
         #{category.name: category.confidence}
         result[category.name] = category.confidence
-    
-    if verbose:
-        print(text)
-        for category in categories:
-            print("=" * 20)
-            print("{:<16}: {}".format("category", category.name))
-            print("{:<16}: {}".format("confidence", category.confidence))
+
+    print(text)
+    for category in categories:
+        print("=" * 20)
+        print("{:<16}: {}".format("category", category.name))
+        print("{:<16}: {}".format("confidence", category.confidence))
     
     return result
