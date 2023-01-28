@@ -36,19 +36,21 @@ newBucketName = generateName(6)
 bucket = storage_client.create_bucket(newBucketName)
 
 # Receives a url and returns it as text
-url = "https://geeksforgeeks.org" # will be replaced with user input url
+url = "https://www.airbnb.co.uk/s/Bratislava--Slovakia/homes?tab_id=home_tab&refinement_paths%5B%5D=%2Fhomes&place_id=ChIJl2HKCjaJbEcRaEOI_YKbH2M&query=Bratislava%2C%20Slovakia&checkin=2020-11-01&checkout=2020-11-22&source=search_blocks_selector_p1_flow&search_type=search_query" # will be replaced with user input url
 r = requests.get(url)
-soup = BeautifulSoup(r.text, 'html.parser') 
+soup = BeautifulSoup(r.text, 'html.parser')
 
 # For each image in html, run downloadImg
+num = 0
 for image in soup.find_all('img'):
     image_url = image['src']
-    #print(image_url)
+    print(image_url)
     if(image_url != "" and image_url.find("http") != -1):
-        downloadImg(image['src'], "images", newBucketName)
+        downloadImg(image['src'], "images", newBucketName, num)
+        num += 1 
 
 # List of items in cloud bucket
-bucketList = bucket.list_blobs();
+bucketList = bucket.list_blobs()
 
 # Checks each image in bucket using cloud vision
 for x in bucketList:
