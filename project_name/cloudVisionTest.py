@@ -117,5 +117,9 @@ def percentLikely():
     out = [0,0,0,0,0]
     x = 0
     for i in allStats:
-        out[x] = ( x.data[5] + x.data[4] + x.data[3] ) / x.total
+        out[x] = ( i.data[5] + i.data[4] + i.data[3] ) / (i.total - i.data[0])
+        x += 1
     return out
+
+def total():
+    return adultContent.data[0] + adultContent.data[1] + adultContent.data[2] + adultContent.data[3] + adultContent.data[4] + adultContent.data[5]

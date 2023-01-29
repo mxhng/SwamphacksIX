@@ -8,7 +8,7 @@
 #run with 'python -m streamlit run your_script.py' in cmd when in file directory
 import streamlit as st
 import base64
-from cloudVisionTest import main, vLikely, percentLikely
+from cloudVisionTest import main, vLikely, percentLikely, total
 import imageHTML 
 from nlpTest import nlpCategorize
 
@@ -44,7 +44,7 @@ def add_bg_from_local(image_file):
 
 with col1:
     #HEADER
-    st.markdown('<p class="big-font">Sus or Safe</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font">Sus or Safe?</p>', unsafe_allow_html=True)
     #st.title("SUS or SAFE")
 
     #BUTTON
@@ -69,11 +69,10 @@ with col1:
             st.write("We detected something sus.")
 
         for key in nlpTags:
-            st.write("We are " + nlpTags[key] + "% confident that this website is about " + key[1:len(key)] + ".")
+            pctg = '<string style="font-size: 20px; color:Red">' + nlpTags[key] + '%</string>'
+            st.markdown("We are " + pctg + " confident that this website is about " + key[1:len(key)] + ".", unsafe_allow_html=True)
         
         #VISION STUFF
-        st.write("Images contain the following types of content:")
-        
         #PERCENTAGE BARS
         #racy, spoofed, violence, adult, medical
         #racynum = veryLikely[4]
@@ -81,7 +80,10 @@ with col1:
         veryLikely = vLikely()
         percentages = percentLikely()
 
-        racynum = percentages[4]
+        st.write(str(total()) + " images were discovered.")
+        st.write("Images contain the following types of content:")
+
+        racynum =  percentages[4]
         spoofednum = percentages[2]
         violencenum = percentages[3]
         adultnum = percentages[0]
@@ -94,29 +96,34 @@ with col1:
             #st.write("max: " + str(max(categories)))
 
             if(max(categories) == racynum): 
-                st.subheader("Racy:  " + str(racynum) + "%")
+                st.subheader("Racy:  " + "%.2f" % racynum + "% of images are possibly, likely, or very likely to be racy")
+                st.progress(racynum/100)
                 st.write("\t" + str(veryLikely[4]) + " images are very likely to be racy.") 
-                st.progress(racynum)
+                racynum = -1
         
-            if(max(categories) == spoofednum):
-                st.subheader("Spoofed: " + str(spoofednum) + "%")
+            elif (max(categories) == spoofednum):
+                st.subheader("Spoofed: " + "%.2f" % spoofednum + "% of images are possibly, likely, or very likely to be spoofed")
+                st.progress(spoofednum/100)
                 st.write("\t" + str(veryLikely[2]) + " images are very likely to be spoofed.")
-                st.progress(spoofednum)
+                spoofednum = -1
 
-            if(max(categories) == violencenum):
-                st.subheader("Violence: " + str(violencenum) + "%")
+            elif(max(categories) == violencenum):
+                st.subheader("Violence: " + "%.2f" % violencenum + "% of images are possibly, likely, or very likely to be violent")
+                st.progress(violencenum/100)
                 st.write("\t" + str(veryLikely[3]) + " images are very likely to be violent.")
-                st.progress(violencenum)
+                violencenum = -1
 
-            if(max(categories) == adultnum):
-                st.subheader("Adult: " + str(adultnum) + "%")
+            elif(max(categories) == adultnum):
+                st.subheader("Adult: " + "%.2f" % adultnum + "% of images are possibly, likely, or very likely to be adult")
+                st.progress(adultnum/100)
                 st.write("\t" + str(veryLikely[0]) + " images are very likely to be adult.")
-                st.progress(adultnum)
+                adultnum = -1
 
-            if(max(categories) == medicalnum):
-                st.subheader("Medical: " + str(medicalnum) + "%")
+            elif(max(categories) == medicalnum):
+                st.subheader("Medical: " + "%.2f" % medicalnum + "% of images are possibly, likely, or very likely to be medical")
+                st.progress(medicalnum/100)
                 st.write("\t" + str(veryLikely[1]) + " images are very likely to be medical.")
-                st.progress(medicalnum)
+                medicalnum = -1
             
             categories.pop(temp)
             #for category in categories:
