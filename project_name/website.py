@@ -80,28 +80,42 @@ with col1:
         violencenum = 40
         adultnum = 70
         medicalnum = 100
+        categories = [racynum, spoofednum, violencenum, adultnum, medicalnum]
 
+        for i in range(5): 
+            temp = categories.index(max(categories))
+            #st.write(str(temp))
+            #st.write("max: " + str(max(categories)))
 
-        st.subheader("Racy:  " + str(racynum) + "%")
-        st.write("\t" + str(racynum) + " images are very likely to be racy.") 
-        st.progress(racynum)
+            if(max(categories) == racynum): 
+                st.subheader("Racy:  " + str(racynum) + "%")
+                st.write("\t" + str(racynum) + " images are very likely to be racy.") 
+                st.progress(racynum)
         
-        st.subheader("Spoofed: " + str(spoofednum) + "%")
-        st.write("\t" + str(spoofednum) + " images are very likely to be spoofed.")
-        st.progress(spoofednum)
-        
-        st.subheader("Violence: " + str(violencenum) + "%")
-        st.write("\t" + str(violencenum) + " images are very likely to be violent.")
-        st.progress(violencenum)
-        
-        st.subheader("Adult: " + str(adultnum) + "%")
-        st.write("\t" + str(adultnum) + " images are very likely to be adult.")
-        st.progress(adultnum)
-        
-        st.subheader("Medical: " + str(medicalnum) + "%")
-        st.write("\t" + str(medicalnum) + " images are very likely to be medical.")
-        st.progress(medicalnum)
-        
+            if(max(categories) == spoofednum):
+                st.subheader("Spoofed: " + str(spoofednum) + "%")
+                st.write("\t" + str(spoofednum) + " images are very likely to be spoofed.")
+                st.progress(spoofednum)
+
+            if(max(categories) == violencenum):
+                st.subheader("Violence: " + str(violencenum) + "%")
+                st.write("\t" + str(violencenum) + " images are very likely to be violent.")
+                st.progress(violencenum)
+
+            if(max(categories) == adultnum):
+                st.subheader("Adult: " + str(adultnum) + "%")
+                st.write("\t" + str(adultnum) + " images are very likely to be adult.")
+                st.progress(adultnum)
+
+            if(max(categories) == medicalnum):
+                st.subheader("Medical: " + str(medicalnum) + "%")
+                st.write("\t" + str(medicalnum) + " images are very likely to be medical.")
+                st.progress(medicalnum)
+            
+            categories.pop(temp)
+            #for category in categories:
+                #st.write(str(category))
+
     else:
         st.write("No information to show.")
         
