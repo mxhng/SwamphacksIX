@@ -5,11 +5,13 @@ import urllib.request
 from bs4 import BeautifulSoup 
 import random
 import string
-from google.cloud import vision
 
+from google.cloud import vision
 from google.cloud import storage
 
 
+# Generate unique bucket ID to make a new bucket
+# Done every time a new URL is submitted, bucket deleted later
 def generateName(length):
     l = string.ascii_lowercase
     resultStr = 'safescan'
@@ -17,6 +19,8 @@ def generateName(length):
         resultStr = resultStr + random.choice(l)
     return resultStr
 
+
+# Given unique bucket ID, upload local file into the bucket
 def uploadFile(bucket_name, source_file, new_file_name):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)

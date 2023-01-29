@@ -6,6 +6,7 @@
 #streamlit hello
 #makesure streamlit is not on laptop by running pip uninstall streamlit and checking it with pip list and conda list
 #run with 'python -m streamlit run your_script.py' in cmd when in file directory
+
 import streamlit as st
 import base64
 from cloudVisionTest import main, vLikely, percentLikely, total, likely, possible
@@ -40,18 +41,10 @@ def add_bg_from_local(image_file):
     """,
     unsafe_allow_html=True
     )
-#add_bg_from_local('resources/blank-wall-psd-japandi-living-room-interior_53876-109284.jpg')   
 
 with col1:
     #HEADER
     st.markdown('<p class="big-font">Sus or Safe?</p>', unsafe_allow_html=True)
-    #st.title("SUS or SAFE")
-
-    #BUTTON
-    #result = st.button("This is a button")
-    #st.write(result)
-    #if result:
-    #    st.write(":smile:")
 
     #SEARCH BAR
     url = st.text_input("Enter Website URL Here :point_down:", placeholder="https://www.ufl.edu/")
@@ -60,9 +53,13 @@ with col1:
     if(url != ""):
 
         badbad = False
-        #NLP STUFF
-        nlpTags = nlpCategorize(url)
         hasSensitive = False
+
+        
+        # Using NLP on the url and displaying the interpretation
+
+        nlpTags = nlpCategorize(url)
+        
         for key in nlpTags:
             if key == "/Adult" or key=="/Sensitive Subjects":
                 hasSensitive = True
@@ -75,11 +72,9 @@ with col1:
             else:
                 pctg = '<string style="font-size: 20px; color:Green">' + nlpTags[key] + '%</string>'
             st.markdown("We are " + pctg + " confident that this website is about " + key[1:len(key)] + ".", unsafe_allow_html=True)
-        
-        #VISION STUFF
-        #PERCENTAGE BARS
-        #racy, spoofed, violence, adult, medical
-        #racynum = veryLikely[4]
+
+
+        # Running Cloud Vision on all images in url
         main(url)
         veryLikely = vLikely()
         isPossible = possible()
@@ -89,6 +84,7 @@ with col1:
         st.write(str(total()) + " images were discovered.")
         st.write("Images contain the following types of content:")
 
+        # Assigning data from Cloud Vision processing
         racynum = percentages[4]
         spoofednum = percentages[2]
         violencenum = percentages[3]
@@ -98,10 +94,9 @@ with col1:
         categories2 = [racynum*100, spoofednum*100, violencenum*100, adultnum*100, medicalnum*100]
 
 
+        # Displaying image data to the user
         for i in range(5): 
             temp = categories.index(max(categories))
-            #st.write(str(temp))
-            #st.write("max: " + str(max(categories)))
 
             if(max(categories) == racynum): 
                 st.subheader("Racy:  " + "%.2f" % (racynum * 100)  + "% of images are possibly, likely, or very likely to be racy")
@@ -134,17 +129,13 @@ with col1:
                 medicalnum = -1
             
             categories.pop(temp)
-            #for category in categories:
-                #st.write(str(category))
 
     else:
         st.write("No information to show.")
         st.write(":exclamation: Please wait for data to load :exclamation:")
         
-    #TEST WITH OUTSIDE FILES
-    #text = trivialFunction(url)
-    #st.write(text)
 
+# Determining what icon to display based on NLP and CV data
 with col2:
     if(url != ""):
         superbadbad = False
@@ -166,8 +157,3 @@ with col2:
             if printed == False:
                 st.title("Safety::smile:")
                 st.image("resources/smiley.png", width=250)
-#ERROR
-#e = RuntimeError('HTML Link Invalid')
-#st.exception(e)
-
-#TO DO: make bars on same line as text, center image, make error for invalid html 

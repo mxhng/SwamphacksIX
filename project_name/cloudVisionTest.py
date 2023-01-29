@@ -12,6 +12,7 @@ from imageHTML import downloadImg, generateName, uploadFile
 # Imports the Google Cloud client library
 from google.cloud import storage
 
+# Collects data from images and organizes it
 def cVision(safe, labels):
     #safe search check
     adultContent.add(safe.adult)
@@ -19,12 +20,6 @@ def cVision(safe, labels):
     spoofedContent.add(safe.spoof)
     violentContent.add(safe.violence)
     racyContent.add(safe.racy)
-
-    #image labeling
-    #print('\nLabels~')
-    #for label in labels:
-        #print(label.description)
-    #print('\n')
 
 class Statistic(object):
 
@@ -46,10 +41,11 @@ class Statistic(object):
         self.total += 1
 
 
-# Instantiates a storage client
+# Instantiates storage and vision clients
 storage_client = storage.Client()
+client = vision.ImageAnnotatorClient()
 
-#stats to be collected
+# Stats to be collected
 adultContent = Statistic("adult")
 medicalContent = Statistic("medical");
 spoofedContent = Statistic("spoofed");
@@ -57,8 +53,6 @@ violentContent = Statistic("violent");
 racyContent = Statistic("racy")
 allContent = [adultContent,medicalContent,spoofedContent,violentContent,racyContent]
 
-# Instantiates a vision client
-client = vision.ImageAnnotatorClient()
 
 def main(url):
     # Generate name for new bucket to be made in the cloud
@@ -103,26 +97,31 @@ def main(url):
     bucket.delete()
 
 
+
+# Data output functions
+
+# Number of images 'possibly,' 'likely,' and 'very likely' belonging to a specified sensitive category
 def calcPossible():
     for i in allContent:
         i.possible = i.data[5] + i.data[4] + i.data[3]
 
 
+# List numbers of 'very likely' images there are in each category
 def vLikely():
-
     out = [adultContent.data[5],medicalContent.data[5],spoofedContent.data[5],violentContent.data[5],racyContent.data[5]]
     return out
 
+# List numbers of 'possible' images there are in each category
 def possible():
-
     out = [adultContent.data[3],medicalContent.data[3],spoofedContent.data[3],violentContent.data[3],racyContent.data[3]]
     return out
 
+# List numbers of 'likely' images there are in each category
 def likely():
-
     out = [adultContent.data[4],medicalContent.data[4],spoofedContent.data[4],violentContent.data[4],racyContent.data[4]]
     return out
 
+# List percent (<1) of images belonging to each category per category
 def percentLikely():
     calcPossible()
     return [ adultContent.possible / (adultContent.total - adultContent.data[0]),
@@ -131,5 +130,6 @@ def percentLikely():
     violentContent.possible / (violentContent.total - violentContent.data[0]),
     racyContent.possible / (racyContent.total - racyContent.data[0])]
 
+# Returns total amount of images processed
 def total():
     return adultContent.total
