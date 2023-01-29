@@ -130,14 +130,16 @@ with col1:
 
 with col2:
     if(url != ""):
-        rating = "great"
+        rating = "badbad"
         if rating == "great":
             st.title("Safety:")
             st.image("resources/smiley.png", width=300)
         if rating == "iffy":
             st.subheader("Safety::warning:")
+            st.image("resources/5a81af7d9123fa7bcc9b0793.png")
         if rating == "badbad": 
             st.subheader("Safety::octagonal_sign:")
+            st.image("resources/Stop.png")
 
 #ERROR
 #e = RuntimeError('HTML Link Invalid')
