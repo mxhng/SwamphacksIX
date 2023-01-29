@@ -8,7 +8,7 @@
 #run with 'python -m streamlit run your_script.py' in cmd when in file directory
 import streamlit as st
 import base64
-from cloudVisionTest import main, vLikely, percentLikely, total
+from cloudVisionTest import main, vLikely, percentLikely, total, likely, possible
 import imageHTML 
 from nlpTest import nlpCategorize
 
@@ -59,6 +59,7 @@ with col1:
 
     if(url != ""):
 
+        badbad = False
         #NLP STUFF
         nlpTags = nlpCategorize(url)
         hasSensitive = False
@@ -69,7 +70,11 @@ with col1:
             st.write("We detected something sus.")
 
         for key in nlpTags:
-            pctg = '<string style="font-size: 20px; color:Red">' + nlpTags[key] + '%</string>'
+            if(key[1:len(key)] == "Sensitive Subjects" or key[1:len(key)] == "Adult"): 
+                pctg = '<string style="font-size: 20px; color:Red">' + nlpTags[key] + '%</string>'
+                badbad = True
+            else:
+                pctg = '<string style="font-size: 20px; color:Green">' + nlpTags[key] + '%</string>'
             st.markdown("We are " + pctg + " confident that this website is about " + key[1:len(key)] + ".", unsafe_allow_html=True)
         
         #VISION STUFF
@@ -78,17 +83,21 @@ with col1:
         #racynum = veryLikely[4]
         main(url)
         veryLikely = vLikely()
+        isPossible = possible()
+        isLikely = likely()
         percentages = percentLikely()
 
         st.write(str(total()) + " images were discovered.")
         st.write("Images contain the following types of content:")
 
-        racynum =  percentages[4]
+        racynum = percentages[4]
         spoofednum = percentages[2]
         violencenum = percentages[3]
         adultnum = percentages[0]
         medicalnum = percentages[1]
         categories = [racynum, spoofednum, violencenum, adultnum, medicalnum]
+        categories2 = [racynum*100, spoofednum*100, violencenum*100, adultnum*100, medicalnum*100]
+
 
         for i in range(5): 
             temp = categories.index(max(categories))
@@ -96,33 +105,33 @@ with col1:
             #st.write("max: " + str(max(categories)))
 
             if(max(categories) == racynum): 
-                st.subheader("Racy:  " + "%.2f" % racynum + "% of images are possibly, likely, or very likely to be racy")
-                st.progress(racynum/100)
-                st.write("\t" + str(veryLikely[4]) + " images are very likely to be racy.") 
+                st.subheader("Racy:  " + "%.2f" % (racynum * 100)  + "% of images are possibly, likely, or very likely to be racy")
+                st.progress(racynum)
+                st.write("\t" + str(veryLikely[4]) + " images are very likely, " + str(isLikely[4]) + " images are likely, and " + str(isPossible[4]) + " are possibly racy.") 
                 racynum = -1
         
             elif (max(categories) == spoofednum):
-                st.subheader("Spoofed: " + "%.2f" % spoofednum + "% of images are possibly, likely, or very likely to be spoofed")
-                st.progress(spoofednum/100)
-                st.write("\t" + str(veryLikely[2]) + " images are very likely to be spoofed.")
+                st.subheader("Spoofed: " + "%.2f" % (spoofednum * 100) + "% of images are possibly, likely, or very likely to be spoofed")
+                st.progress(spoofednum)
+                st.write("\t" + str(veryLikely[2]) + " images are very likely, " + str(isLikely[2]) + " images are likely, and " + str(isPossible[2]) + " are possibly spoofed.") 
                 spoofednum = -1
 
             elif(max(categories) == violencenum):
-                st.subheader("Violence: " + "%.2f" % violencenum + "% of images are possibly, likely, or very likely to be violent")
-                st.progress(violencenum/100)
-                st.write("\t" + str(veryLikely[3]) + " images are very likely to be violent.")
+                st.subheader("Violence: " + "%.2f" % (violencenum * 100) + "% of images are possibly, likely, or very likely to be violent")
+                st.progress(violencenum)
+                st.write("\t" + str(veryLikely[3]) + " images are very likely, " + str(isLikely[3]) + " images are likely, and " + str(isPossible[3]) + " are possibly violent.") 
                 violencenum = -1
 
             elif(max(categories) == adultnum):
-                st.subheader("Adult: " + "%.2f" % adultnum + "% of images are possibly, likely, or very likely to be adult")
-                st.progress(adultnum/100)
-                st.write("\t" + str(veryLikely[0]) + " images are very likely to be adult.")
+                st.subheader("Adult: " + "%.2f" % (adultnum * 100) + "% of images are possibly, likely, or very likely to be adult")
+                st.progress(adultnum)
+                st.write("\t" + str(veryLikely[0]) + " images are very likely, " + str(isLikely[0]) + " images are likely, and " + str(isPossible[0]) + " are possibly adult.") 
                 adultnum = -1
 
             elif(max(categories) == medicalnum):
-                st.subheader("Medical: " + "%.2f" % medicalnum + "% of images are possibly, likely, or very likely to be medical")
-                st.progress(medicalnum/100)
-                st.write("\t" + str(veryLikely[1]) + " images are very likely to be medical.")
+                st.subheader("Medical: " + "%.2f" % (medicalnum * 100)+ "% of images are possibly, likely, or very likely to be medical")
+                st.progress(medicalnum)
+                st.write("\t" + str(veryLikely[1]) + " images are very likely, " + str(isLikely[1]) + " images are likely, and " + str(isPossible[1]) + " are possibly medical.") 
                 medicalnum = -1
             
             categories.pop(temp)
@@ -131,6 +140,7 @@ with col1:
 
     else:
         st.write("No information to show.")
+        st.write(":exclamation: Please wait for data to load :exclamation:")
         
     #TEST WITH OUTSIDE FILES
     #text = trivialFunction(url)
@@ -138,17 +148,25 @@ with col1:
 
 with col2:
     if(url != ""):
-        rating = "badbad"
-        if rating == "great":
-            st.title("Safety:")
-            st.image("resources/smiley.png", width=250)
-        if rating == "iffy":
-            st.subheader("Safety::warning:")
-            st.image("resources/5a81af7d9123fa7bcc9b0793.png", width=250)
-        if rating == "badbad": 
-            st.subheader("Safety::octagonal_sign:")
+        superbadbad = False
+        for i in range(5):
+            #st.write(str(categories2[i]))
+            if(categories2[i] >= 60):
+                superbadbad = True
+        if(badbad == True or superbadbad == True):
+            st.subheader("Safety:🛑")
             st.image("resources/Stop.png", width=250)
-
+        else:
+            printed = False
+            for i in range(5):
+                if(categories2[i] >= 20):
+                    st.subheader("Safety:⚠️")
+                    st.image("resources/5a81af7d9123fa7bcc9b0793.png", width=250)
+                    printed = True
+                    break
+            if printed == False:
+                st.title("Safety:")
+                st.image("resources/smiley.png", width=250)
 #ERROR
 #e = RuntimeError('HTML Link Invalid')
 #st.exception(e)
