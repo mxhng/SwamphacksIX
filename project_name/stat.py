@@ -1,4 +1,4 @@
-class Stat:
+class Statistic(object):
 
 	vLikely = 5
 	likely = 4
@@ -12,13 +12,13 @@ class Stat:
 		self.total = 0;
 		self.avg = 0;
 
-	def calcAverage():
+	def calcAverage(self):
 		i = 1
 		for i in range 6:
 			avg += data[i] * i
 		avg /= (total - data[unknown])
 
-	def add(input):
+	def add(self, input):
 		if (input >= 0 and input < 6):
 			data[input] += 1
 			total += 1
