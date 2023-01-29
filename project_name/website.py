@@ -140,6 +140,7 @@ with col1:
 
     else:
         st.write("No information to show.")
+        st.write(":exclamation: Please wait for data to load :exclamation:")
         
     #TEST WITH OUTSIDE FILES
     #text = trivialFunction(url)
