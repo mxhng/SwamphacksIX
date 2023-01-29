@@ -61,12 +61,17 @@ with col1:
 
     if(url != ""):
 
-        #main(url)
-        #veryLikely = vLikely()
         #NLP STUFF
-        result = nlpCategorize(url)
-        print(result.values())
-        st.write("This website is described as: [TONY STUFF]")
+        nlpTags = nlpCategorize(url)
+        hasSensitive = False
+        for key in nlpTags:
+            if key == "/Adult" or key=="/Sensitive Subjects":
+                hasSensitive = True
+        if hasSensitive:
+            st.write("We detected something sus.")
+
+        for key in nlpTags:
+            st.write("We are " + nlpTags[key] + "% confident that this website is about " + key[1:len(key)] + ".")
         
         #VISION STUFF
         st.write("Images contain the following types of content:")
