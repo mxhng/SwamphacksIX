@@ -39,17 +39,12 @@ class Statistic(object):
         self.cat = cat
         self.data = [0,0,0,0,0,0]
         self.total = 0;
-        self.avg = 0;
-
-    def calcAverage(self):
-        i = 1
-        for i in range (6):
-            self.avg += self.data[i] * i
-        self.avg /= (self.total - self.data[0])
+        self.possible = 0;
 
     def add(self, input):
         self.data[input] += 1
         self.total += 1
+
 
 # Instantiates a storage client
 storage_client = storage.Client()
@@ -60,7 +55,7 @@ medicalContent = Statistic("medical");
 spoofedContent = Statistic("spoofed");
 violentContent = Statistic("violent");
 racyContent = Statistic("racy")
-allStats = [adultContent,medicalContent,spoofedContent,violentContent,racyContent] 
+allContent = [adultContent,medicalContent,spoofedContent,violentContent,racyContent]
 
 # Instantiates a vision client
 client = vision.ImageAnnotatorClient()
@@ -107,18 +102,33 @@ def main(url):
     bucket.delete()
 
 
+def calcPossible():
+    for i in allContent:
+        i.possible = i.data[5] + i.data[4] + i.data[3]
+
+
 def vLikely():
 
     out = [adultContent.data[5],medicalContent.data[5],spoofedContent.data[5],violentContent.data[5],racyContent.data[5]]
     return out
 
-def percentLikely():
-    out = [ (adultContent.data[5] + adultContent.data[4] + adultContent.data[3]) / (adultContent.total - adultContent.data[0]),
-    (medicalContent.data[5] + medicalContent.data[4] + medicalContent.data[3]) / (medicalContent.total - medicalContent.data[0]),
-    (spoofedContent.data[5] + spoofedContent.data[4] + spoofedContent.data[3]) / (spoofedContent.total - spoofedContent.data[0]),
-    (violentContent.data[5] + violentContent.data[4] + violentContent.data[3]) / (violentContent.total - violentContent.data[0]),
-    (racyContent.data[5] + racyContent.data[4] + racyContent.data[3]) / (racyContent.total - racyContent.data[0])]
+def possible():
+
+    out = [adultContent.data[3],medicalContent.data[3],spoofedContent.data[3],violentContent.data[3],racyContent.data[3]]
     return out
+
+def likely():
+
+    out = [adultContent.data[4],medicalContent.data[4],spoofedContent.data[4],violentContent.data[4],racyContent.data[4]]
+    return out
+
+def percentLikely():
+    calcPossible()
+    return [ adultContent.possible / (adultContent.total - adultContent.data[0]),
+    medicalContent.possible / (medicalContent.total - medicalContent.data[0]),
+    spoofedContent.possible / (spoofedContent.total - spoofedContent.data[0]),
+    violentContent.possible / (violentContent.total - violentContent.data[0]),
+    racyContent.possible / (racyContent.total - racyContent.data[0])]
 
 def total():
     return adultContent.total
