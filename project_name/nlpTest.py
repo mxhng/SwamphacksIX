@@ -2,14 +2,18 @@ import argparse
 import io
 import json
 import os
+from textHTML import getText
 
 # Imports the Google Cloud client library
 from google.cloud import language_v1
 import numpy
 import six
 
-def classify (text):
+def nlpCategorize (self, url):
     #Categorizes Input Text
+
+    #Call web scraper to generate text from url
+    text = getText(url)
 
     # Instantiates a client
     language_client = language_v1.LanguageServiceClient()
