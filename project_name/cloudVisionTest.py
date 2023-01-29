@@ -79,10 +79,11 @@ def main(url):
     num = 0
     for image in soup.find_all('img'):
         image_url = image['src']
-        print(image_url)
+        #print(image_url)
         if(image_url != "" and image_url.find("http") != -1):
-            downloadImg(image['src'], "images", newBucketName, num)
-            num += 1 
+            if(image_url.split('.')[-1] != 'svg'):
+                downloadImg(image['src'], "images", newBucketName, num)
+                num += 1 
 
     # List of items in cloud bucket
     bucketList = bucket.list_blobs()
