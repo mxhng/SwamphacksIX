@@ -21,10 +21,10 @@ def cVision(safe, labels):
     racyContent.add(safe.racy)
 
     #image labeling
-    print('\nLabels~')
-    for label in labels:
-        print(label.description)
-    print('\n')
+    #print('\nLabels~')
+    #for label in labels:
+        #print(label.description)
+    #print('\n')
 
 class Statistic(object):
 
@@ -48,9 +48,8 @@ class Statistic(object):
         self.avg /= (self.total - self.data[0])
 
     def add(self, input):
-        if (input >= 0 and input < 6):
-            self.data[input] += 1
-            self.total += 1
+        self.data[input] += 1
+        self.total += 1
 
 # Instantiates a storage client
 storage_client = storage.Client()
@@ -107,19 +106,19 @@ def main(url):
     bucket = storage_client.get_bucket(newBucketName)
     bucket.delete()
 
-    allStats = [adultContent,medicalContent,spoofedContent,violentContent,racyContent] 
 
 def vLikely():
+
     out = [adultContent.data[5],medicalContent.data[5],spoofedContent.data[5],violentContent.data[5],racyContent.data[5]]
     return out
 
 def percentLikely():
-    out = [0,0,0,0,0]
-    x = 0
-    for i in allStats:
-        out[x] = ( i.data[5] + i.data[4] + i.data[3] ) / (i.total - i.data[0])
-        x += 1
+    out = [ (adultContent.data[5] + adultContent.data[4] + adultContent.data[3]) / (adultContent.total - adultContent.data[0]),
+    (medicalContent.data[5] + medicalContent.data[4] + medicalContent.data[3]) / (medicalContent.total - medicalContent.data[0]),
+    (spoofedContent.data[5] + spoofedContent.data[4] + spoofedContent.data[3]) / (spoofedContent.total - spoofedContent.data[0]),
+    (violentContent.data[5] + violentContent.data[4] + violentContent.data[3]) / (violentContent.total - violentContent.data[0]),
+    (racyContent.data[5] + racyContent.data[4] + racyContent.data[3]) / (racyContent.total - racyContent.data[0])]
     return out
 
 def total():
-    return adultContent.data[0] + adultContent.data[1] + adultContent.data[2] + adultContent.data[3] + adultContent.data[4] + adultContent.data[5]
+    return adultContent.total
