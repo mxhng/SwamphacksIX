@@ -5,12 +5,11 @@
 #pip install streamlit
 #streamlit hello
 #makesure streamlit is not on laptop by running pip uninstall streamlit and checking it with pip list and conda list
+#run with 'python -m streamlit run your_script.py' in cmd when in file directory
 import streamlit as st
 import base64
 from test import trivialFunction
-
-
-#import cloudVisionTest
+import cloudVisionTest
 
 st.set_page_config(page_title="My Webpage", page_icon="resources/florida-gators-logo-png-transparent.png", layout="wide")
 
@@ -58,15 +57,18 @@ with col1:
     #st.write("this is the url: " + url)
 
     if(url != ""):
+
+        main(url)
+        veryLikely = vLikely()
         #NLP STUFF
         st.write("This website is described as: [TONY STUFF]")
         
         #VISION STUFF
-        st.write("Images contain the following types of content: [MAX+LIAM STUFF]")
+        st.write("Images contain the following types of content:")
         
         #PERCENTAGE BARS
         #racy, spoofed, violence, adult, medical
-        racynum = 5
+        racynum = veryLikely[4]
         racybar = racynum/25
         racynum = str(racynum)
         stringracy = str( "%.1f" % (racybar*100))
