@@ -1,3 +1,36 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Codespaces
+Marketplace
+Explore
+ 
+@mxhng 
+mxhng
+/
+SwamphacksIX
+Public
+Fork your own copy of mxhng/SwamphacksIX
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+SwamphacksIX/project_name/cloudVisionTest.py /
+@mxhng
+mxhng trying to integrate cloud vision with website
+…
+Latest commit fda2437 1 hour ago
+ History
+ 2 contributors
+@mxhng@liamrs222
+129 lines (100 sloc)  3.6 KB
+
 import io
 import os
 import requests
@@ -61,11 +94,12 @@ medicalContent = Statistic("medical");
 spoofedContent = Statistic("spoofed");
 violentContent = Statistic("violent");
 racyContent = Statistic("racy")
+allStats = [adultContent,medicalContent,spoofedContent,violentContent,racyContent] 
 
 # Instantiates a vision client
 client = vision.ImageAnnotatorClient()
 
-def main(self, url):
+def main(url):
     # Generate name for new bucket to be made in the cloud
     newBucketName = generateName(6)
 
@@ -112,18 +146,9 @@ def vLikely(self):
     out = [adultContent.data[5],medicalContent.data[5],spoofedContent.data[5],violentContent.data[5],racyContent.data[5]]
     return out
 
-#def percentLikely(self)
- #   out = []
-
-
-
-#for i in allStats:
- #   print("There are " + str(i.data[5]) + " images that are very likely to be " + i.cat)
-  #  print("There are " + str(i.data[4]) + " images that are likely to be " + i.cat)
-   # print("There are " + str(i.data[3]) + " images that are possible to be " + i.cat)
-    #print("There are " + str(i.data[2]) + " images that are unlikely to be " + i.cat)
-  #  print("There are " + str(i.data[1]) + " images that are very unlikely to be " + i.cat)
-  #  print("There are " + str(i.data[0]) + " images that are unknown to be " + i.cat)
-
-#if (num == 0):
-    #print("No images detected on this website.")
+def percentLikely():
+    out = [0,0,0,0,0]
+    x = 0
+    for i in allStats:
+        out[x] = ( x.data[5] + x.data[4] + x.data[3] ) / x.total
+    return out
