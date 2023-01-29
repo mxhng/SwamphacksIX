@@ -14,7 +14,7 @@ from nlpTest import nlpCategorize
 
 st.set_page_config(page_title="Sus or Safe", page_icon="resources/mzgmqc1qc3t51.png", layout="wide")
 
-col1, col2 = st.columns([3,1])
+col1, col2 = st.columns([4,1], gap="large")
 
 st.markdown("""
 <style>
@@ -165,7 +165,7 @@ with col2:
                     printed = True
                     break
             if printed == False:
-                st.title("Safety:")
+                st.title("Safety::smile:")
                 st.image("resources/smiley.png", width=250)
 #ERROR
 #e = RuntimeError('HTML Link Invalid')
