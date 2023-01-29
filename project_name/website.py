@@ -133,13 +133,13 @@ with col2:
         rating = "badbad"
         if rating == "great":
             st.title("Safety:")
-            st.image("resources/smiley.png", width=300)
+            st.image("resources/smiley.png", width=250)
         if rating == "iffy":
             st.subheader("Safety::warning:")
-            st.image("resources/5a81af7d9123fa7bcc9b0793.png")
+            st.image("resources/5a81af7d9123fa7bcc9b0793.png", width=250)
         if rating == "badbad": 
             st.subheader("Safety::octagonal_sign:")
-            st.image("resources/Stop.png")
+            st.image("resources/Stop.png", width=250)
 
 #ERROR
 #e = RuntimeError('HTML Link Invalid')
