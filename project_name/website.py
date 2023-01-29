@@ -67,8 +67,7 @@ with col1:
             if key == "/Adult" or key=="/Sensitive Subjects":
                 hasSensitive = True
         if hasSensitive:
-            st.write("We detected something sus.")
-
+            st.markdown("**:red[We have detected something sus.]**")
         for key in nlpTags:
             if(key[1:len(key)] == "Sensitive Subjects" or key[1:len(key)] == "Adult"): 
                 pctg = '<string style="font-size: 20px; color:Red">' + nlpTags[key] + '%</string>'
