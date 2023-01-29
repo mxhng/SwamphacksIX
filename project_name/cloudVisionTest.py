@@ -1,36 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
- 
-@mxhng 
-mxhng
-/
-SwamphacksIX
-Public
-Fork your own copy of mxhng/SwamphacksIX
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-SwamphacksIX/project_name/cloudVisionTest.py /
-@mxhng
-mxhng trying to integrate cloud vision with website
-…
-Latest commit fda2437 1 hour ago
- History
- 2 contributors
-@mxhng@liamrs222
-129 lines (100 sloc)  3.6 KB
-
 import io
 import os
 import requests
@@ -142,7 +109,7 @@ def main(url):
 
     allStats = [adultContent,medicalContent,spoofedContent,violentContent,racyContent] 
 
-def vLikely(self):
+def vLikely():
     out = [adultContent.data[5],medicalContent.data[5],spoofedContent.data[5],violentContent.data[5],racyContent.data[5]]
     return out
 
