@@ -5,9 +5,18 @@
 #pip install streamlit
 #streamlit hello
 #makesure streamlit is not on laptop by running pip uninstall streamlit and checking it with pip list and conda list
+<<<<<<< Updated upstream
 import streamlit as st
 import base64
 from test import trivialFunction
+=======
+#run with 'python -m streamlit run website.py' in cmd when in file directory
+import streamlit as st
+import base64
+from test import trivialFunction
+from cloudVisionTest import main, vLikely
+
+>>>>>>> Stashed changes
 
 st.set_page_config(page_title="My Webpage", page_icon="resources/florida-gators-logo-png-transparent.png", layout="wide")
 

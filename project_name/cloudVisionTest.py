@@ -61,8 +61,32 @@ source = './resources'
 # Instantiates a vision client
 client = vision.ImageAnnotatorClient()
 
+<<<<<<< Updated upstream
 files = os.listdir(path='./resources/')
 length = len(files)
+=======
+def main(url):
+    # Generate name for new bucket to be made in the cloud
+    newBucketName = generateName(6)
+
+    # Make the bucket, will be deleted
+    bucket = storage_client.create_bucket(newBucketName)
+
+    # Receives a url and returns it as text
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    num = 0
+    for image in soup.find_all('img'):
+        image_url = image['src']
+        print(image_url)
+        if(image_url != "" and image_url.find("http") != -1):
+            downloadImg(image['src'], "images", newBucketName, num)
+            num += 1 
+
+    # List of items in cloud bucket
+    bucketList = bucket.list_blobs()
+>>>>>>> Stashed changes
 
 # Generate name for new bucket to be made in the cloud
 newBucketName = generateName(6)
@@ -98,10 +122,24 @@ for x in bucketList:
     labelresponse = client.label_detection(image=image)
     ssresponse = client.safe_search_detection(image=image)
 
+<<<<<<< Updated upstream
     checkSafe = ssresponse.safe_search_annotation
     checkLabels = labelresponse.label_annotations
 
     vision(checkSafe)
+=======
+def vLikely():
+    out = [adultContent.data[5],medicalContent.data[5],spoofedContent.data[5],violentContent.data[5],racyContent.data[5]]
+    return out
+
+def percentLikely():
+    out = [0,0,0,0,0]
+    x = 0
+    for i in allStats:
+        out[x] = ( x.data[5] + x.data[4] + x.data[3] ) / x.total
+    return out
+
+>>>>>>> Stashed changes
 
     x.delete()
 
