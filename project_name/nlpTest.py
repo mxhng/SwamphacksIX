@@ -9,7 +9,7 @@ from google.cloud import language_v1
 import numpy
 import six
 
-def nlpCategorize (self, url):
+def nlpCategorize (url):
     #Categorizes Input Text
 
     #Call web scraper to generate text from url

@@ -8,10 +8,13 @@
 #run with 'python -m streamlit run your_script.py' in cmd when in file directory
 import streamlit as st
 import base64
-from test import trivialFunction
-import cloudVisionTest
+#from test import trivialFunction
+#import cloudVisionTest
+#import imageHTML 
+import nlpTest
+from nlpTest import nlpCategorize
 
-st.set_page_config(page_title="My Webpage", page_icon="resources/florida-gators-logo-png-transparent.png", layout="wide")
+st.set_page_config(page_title="Sus or Safe", page_icon="resources/mzgmqc1qc3t51.png", layout="wide")
 
 col1, col2 = st.columns([3,1])
 
@@ -58,9 +61,11 @@ with col1:
 
     if(url != ""):
 
-        main(url)
-        veryLikely = vLikely()
+        #main(url)
+        #veryLikely = vLikely()
         #NLP STUFF
+        result = nlpCategorize(url)
+        print(result.values())
         st.write("This website is described as: [TONY STUFF]")
         
         #VISION STUFF
@@ -68,45 +73,35 @@ with col1:
         
         #PERCENTAGE BARS
         #racy, spoofed, violence, adult, medical
-        racynum = veryLikely[4]
-        racybar = racynum/25
-        racynum = str(racynum)
-        stringracy = str( "%.1f" % (racybar*100))
-        st.subheader("Racy:  " + stringracy + "%")
-        st.write("\t" + racynum + " images are very likely to be racy.") 
-        st.progress(racybar)
-        
+        #racynum = veryLikely[4]
+
+        racynum = 5
         spoofednum = 10
-        spoofedbar = spoofednum/50
-        spoofednum = str(spoofednum)
-        stringspoofed = str("%.1f" % (spoofedbar*100))
-        st.subheader("Spoofed: " + stringspoofed + "%")
-        st.write("\t" + spoofednum + " images are very likely to be spoofed.")
-        st.progress(spoofedbar)
-        
         violencenum = 40
-        violencebar = violencenum/70
-        violencenum = str(violencenum)
-        stringviolence = str("%.1f" % (violencebar*100))
-        st.subheader("Violence: " + stringviolence + "%")
-        st.write("\t" + violencenum + " images are very likely to be violent.")
-        st.progress(violencebar)
-        
         adultnum = 70
-        adultbar = adultnum/100
-        adultnum = str(adultnum)
-        stringadult = str("%.1f" % (adultbar*100))
-        st.subheader("Adult: " + stringadult + "%")
-        st.write("\t" + adultnum + " images are very likely to be adult.")
-        st.progress(adultbar)
-        
         medicalnum = 100
-        medicalbar = medicalnum/100
-        medicalnum = str(medicalnum)
-        stringmedical = str("%.1f" % (medicalbar*100))
-        st.subheader("Medical: " + stringmedical + "%")
-        st.write("\t" + medicalnum + " images are very likely to be medical.")
-        st.progress(medicalbar)
+
+
+        st.subheader("Racy:  " + str(racynum) + "%")
+        st.write("\t" + str(racynum) + " images are very likely to be racy.") 
+        st.progress(racynum)
+        
+        st.subheader("Spoofed: " + str(spoofednum) + "%")
+        st.write("\t" + str(spoofednum) + " images are very likely to be spoofed.")
+        st.progress(spoofednum)
+        
+        st.subheader("Violence: " + str(violencenum) + "%")
+        st.write("\t" + str(violencenum) + " images are very likely to be violent.")
+        st.progress(violencenum)
+        
+        st.subheader("Adult: " + str(adultnum) + "%")
+        st.write("\t" + str(adultnum) + " images are very likely to be adult.")
+        st.progress(adultnum)
+        
+        st.subheader("Medical: " + str(medicalnum) + "%")
+        st.write("\t" + str(medicalnum) + " images are very likely to be medical.")
+        st.progress(medicalnum)
+        
     else:
         st.write("No information to show.")
         
