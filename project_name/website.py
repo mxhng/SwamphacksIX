@@ -10,6 +10,7 @@ import streamlit as st
 import base64
 from test import trivialFunction
 import cloudVisionTest
+from nlpTest import nlpCategorize
 
 st.set_page_config(page_title="My Webpage", page_icon="resources/florida-gators-logo-png-transparent.png", layout="wide")
 
@@ -58,10 +59,19 @@ with col1:
 
     if(url != ""):
 
-        main(url)
-        veryLikely = vLikely()
+        #main(url)
+        #veryLikely = vLikely()
         #NLP STUFF
-        st.write("This website is described as: [TONY STUFF]")
+        nlpTags = nlpCategorize(url)
+        hasSensitive = False
+        for key in nlpTags:
+            if key == "/Adult" or key=="/Sensitive Subjects":
+                hasSensitive = True
+        if hasSensitive:
+            st.write("We detected something sus.")
+
+        for key in nlpTags:
+            st.write("We are " + nlpTags[key] + "% confident that this website is about " + key[1:len(key)] + ".")
         
         #VISION STUFF
         st.write("Images contain the following types of content:")

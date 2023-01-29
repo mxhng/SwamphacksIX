@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def getText(self, url):
+def getText(url):
     #open url with GET
     resp = requests.get(url)
 

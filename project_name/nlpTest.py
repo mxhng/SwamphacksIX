@@ -9,7 +9,7 @@ from google.cloud import language_v1
 import numpy
 import six
 
-def nlpCategorize (self, url):
+def nlpCategorize (url):
     #Categorizes Input Text
 
     #Call web scraper to generate text from url
@@ -32,10 +32,15 @@ def nlpCategorize (self, url):
         #{category.name: category.confidence}
         result[category.name] = category.confidence
 
-    print(text)
-    for category in categories:
-        print("=" * 20)
-        print("{:<16}: {}".format("category", category.name))
-        print("{:<16}: {}".format("confidence", category.confidence))
+    #sort results by confidence level (highest first)
+    confidenceSortedResults = sorted(result.items(), key = lambda x:x[1], reverse = True)
+
+    if len(result) > 3:
+        confidenceSortedResultsDict = dict(confidenceSortedResults.items()[0: 3])
+    else:
+        confidenceSortedResultsDict = dict(confidenceSortedResults)
+
+    for key in confidenceSortedResultsDict:
+        confidenceSortedResultsDict[key] = str(round(100.0 * float(confidenceSortedResultsDict[key]), 2))
     
-    return result
+    return confidenceSortedResultsDict
