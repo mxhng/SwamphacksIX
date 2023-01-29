@@ -9,9 +9,21 @@ import streamlit as st
 import base64
 from test import trivialFunction
 
+
+#import cloudVisionTest
+
 st.set_page_config(page_title="My Webpage", page_icon="resources/florida-gators-logo-png-transparent.png", layout="wide")
 
 col1, col2 = st.columns([3,1])
+
+st.markdown("""
+<style>
+.big-font {
+    font-size:80px;
+    font-family:Monospace;
+}
+</style>
+""", unsafe_allow_html=True)
 
 #BACKGROUND 
 def add_bg_from_local(image_file):
@@ -28,11 +40,12 @@ def add_bg_from_local(image_file):
     """,
     unsafe_allow_html=True
     )
-add_bg_from_local('resources/blank-wall-psd-japandi-living-room-interior_53876-109284.jpg')   
+#add_bg_from_local('resources/blank-wall-psd-japandi-living-room-interior_53876-109284.jpg')   
 
 with col1:
     #HEADER
-    st.title("[Project Name]")
+    st.markdown('<p class="big-font">Sus or Safe</p>', unsafe_allow_html=True)
+    #st.title("SUS or SAFE")
 
     #BUTTON
     #result = st.button("This is a button")
@@ -92,23 +105,26 @@ with col1:
         st.subheader("Medical: " + stringmedical + "%")
         st.write("\t" + medicalnum + " images are very likely to be medical.")
         st.progress(medicalbar)
+    else:
+        st.write("No information to show.")
         
     #TEST WITH OUTSIDE FILES
-    text = trivialFunction(url)
-    st.write(text)
+    #text = trivialFunction(url)
+    #st.write(text)
 
 with col2:
-    rating = "great"
-    if rating == "great":
-        st.title("Safety:")
-        st.image("resources/smiley.png", width=300)
-    if rating == "iffy":
-        st.subheader("Safety::warning:")
-    if rating == "badbad": 
-        st.subheader("Safety::octagonal_sign:")
+    if(url != ""):
+        rating = "great"
+        if rating == "great":
+            st.title("Safety:")
+            st.image("resources/smiley.png", width=300)
+        if rating == "iffy":
+            st.subheader("Safety::warning:")
+        if rating == "badbad": 
+            st.subheader("Safety::octagonal_sign:")
 
 #ERROR
-e = RuntimeError('HTML Link Invalid')
-st.exception(e)
+#e = RuntimeError('HTML Link Invalid')
+#st.exception(e)
 
 #TO DO: make bars on same line as text, center image, make error for invalid html 
